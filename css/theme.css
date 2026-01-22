@@ -1,0 +1,11 @@
+:root {
+	--bg: #000000;
+	--text: #ffffff;
+	--border: #333333;
+	--btn-bg: #ffffff;
+	--btn-text: #000000;
+	--tile-bg: #333333;
+	--tile-active: #ffffff;
+	--success: #22c55e;
+	--error: #ef4444;
+}

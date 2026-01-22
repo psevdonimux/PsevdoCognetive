@@ -1,0 +1,230 @@
+.container {
+	max-width: 600px;
+	margin: 0 auto;
+	padding: 1rem;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+.header {
+	display: flex;
+	justify-content: space-between;
+	padding: 1rem 0;
+	border-bottom: 1px solid var(--border);
+	margin-bottom: 1rem;
+}
+.header-item {
+	text-align: center;
+}
+.header-item span {
+	display: block;
+	font-size: 0.8rem;
+	color: #888;
+}
+.header-item strong {
+	font-size: 1.2rem;
+}
+.menu {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	padding: 2rem 0;
+}
+.menu-btn {
+	padding: 1.5rem;
+	font-size: 1.1rem;
+	border-radius: 8px;
+	text-align: center;
+}
+.sandbox-btn {
+	position: fixed;
+	top: 1rem;
+	right: 1rem;
+	background: var(--tile-bg);
+	color: var(--text);
+	border: 1px solid var(--border);
+	padding: 0.5rem 1rem;
+	border-radius: 4px;
+	font-size: 0.9rem;
+}
+.sandbox-btn.active {
+	background: var(--success);
+	color: #000;
+}
+.game-grid {
+	display: grid;
+	gap: 8px;
+	margin: 1rem auto;
+	transition: transform 0.5s ease;
+}
+.tile {
+	aspect-ratio: 1;
+	background: var(--tile-bg);
+	border-radius: 8px;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+.tile.active {
+	background: var(--tile-active);
+}
+.tile.correct {
+	background: var(--tile-active);
+}
+.tile.missed {
+	background: var(--success);
+}
+.tile.wrong {
+	background: var(--error);
+}
+.message {
+	text-align: center;
+	font-size: 1.2rem;
+	padding: 1rem 0;
+}
+.lives {
+	display: flex;
+	gap: 0.5rem;
+	justify-content: center;
+	padding: 0.5rem 0;
+}
+.life {
+	width: 20px;
+	height: 20px;
+	background: var(--tile-active);
+	border-radius: 50%;
+}
+.life.lost {
+	background: var(--tile-bg);
+}
+.stroop-container {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+.stroop-question {
+	text-align: center;
+	padding: 1rem;
+	font-size: 0.9rem;
+}
+.stroop-cards {
+	display: flex;
+	gap: 1rem;
+	justify-content: center;
+	padding: 2rem;
+}
+.stroop-card {
+	border: 2px solid var(--border);
+	border-radius: 8px;
+	padding: 2rem 1rem;
+	font-size: 1.5rem;
+	font-weight: bold;
+	width: 130px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.stroop-buttons {
+	display: flex;
+	margin-top: auto;
+	border-top: 2px solid var(--success);
+}
+.stroop-btn {
+	flex: 1;
+	padding: 1.5rem;
+	font-size: 1.2rem;
+	border-radius: 0;
+	background: transparent;
+	color: var(--text);
+}
+.stroop-btn:first-child {
+	border-right: 1px solid var(--border);
+}
+.sidebar {
+	position: fixed;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 1rem;
+}
+.sidebar-item {
+	background: var(--tile-bg);
+	padding: 0.5rem 1rem;
+	border-radius: 4px;
+	text-align: center;
+}
+.sidebar-item span {
+	display: block;
+	font-size: 0.7rem;
+	color: #888;
+}
+.sidebar-item strong {
+	color: var(--success);
+}
+.back-btn {
+	position: fixed;
+	top: 1rem;
+	left: 1rem;
+	background: transparent;
+	color: var(--text);
+	font-size: 1.5rem;
+	padding: 0.5rem;
+}
+.timer-bar {
+	height: 4px;
+	background: var(--success);
+	position: fixed;
+	bottom: 0;
+	left: 0;
+}
+.timer-bar.running {
+	animation: timer-countdown 30s linear forwards;
+}
+@keyframes timer-countdown {
+	from { width: 100%; }
+	to { width: 0%; }
+}
+.mode-toggle {
+	display: flex;
+	justify-content: center;
+	gap: 0.5rem;
+	padding: 0.5rem 0;
+}
+.mode-btn {
+	padding: 0.5rem 1rem;
+	background: var(--tile-bg);
+	color: var(--text);
+	border: 1px solid var(--border);
+	border-radius: 4px;
+	font-size: 0.9rem;
+}
+.mode-btn.active {
+	background: var(--success);
+	color: #000;
+}
+.schulte-grid {
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	gap: 4px;
+	margin: 1rem auto;
+	width: min(90vw, 350px);
+}
+.schulte-cell {
+	aspect-ratio: 1;
+	background: var(--tile-bg);
+	border-radius: 4px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.3rem;
+	font-weight: bold;
+	cursor: pointer;
+	user-select: none;
+}
+.schulte-cell.found {
+	background: var(--success);
+	color: #000;
+}

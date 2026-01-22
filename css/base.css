@@ -1,0 +1,26 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+html {
+	font-size: clamp(14px, 2vw, 16px);
+}
+body {
+	font-family: system-ui, sans-serif;
+	background: var(--bg);
+	color: var(--text);
+	min-height: 100vh;
+}
+button {
+	cursor: pointer;
+	border: none;
+	background: var(--btn-bg);
+	color: var(--btn-text);
+	padding: 0.5rem 1rem;
+	border-radius: 4px;
+	font-size: 1rem;
+}
+button:active {
+	opacity: 0.8;
+}
