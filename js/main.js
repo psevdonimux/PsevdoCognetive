@@ -10,9 +10,17 @@ class App {
 		this.container = document.getElementById('app');
 		this.sandbox = this.storage.get('sandbox', false);
 		this.currentGame = null;
-		this.showMenu();
+		const game = new URLSearchParams(location.search).get('game');
+		if (game) this.startGame(game);
+		else this.showMenu();
+		window.addEventListener('popstate', () => {
+			const game = new URLSearchParams(location.search).get('game');
+			if (game) this.startGame(game);
+			else this.showMenu();
+		});
 	}
 	showMenu() {
+		history.pushState(null, '', location.pathname);
 		this.container.innerHTML = `
 			<button class="sandbox-btn ${this.sandbox ? 'active' : ''}" id="sandboxBtn">Sandbox: ${this.sandbox ? 'ВКЛ' : 'ВЫКЛ'}</button>
 			<div class="container">
@@ -38,6 +46,7 @@ class App {
 		this.showMenu();
 	}
 	startGame(type) {
+		history.pushState(null, '', `?game=${type}`);
 		const onBack = () => this.showMenu();
 		switch (type) {
 			case 'memory':

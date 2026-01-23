@@ -14,17 +14,25 @@ export class StroopTest {
 		this.correct = 0;
 		this.multiplier = 1;
 		this.record = this.storage.get('stroopRecord', 0);
-		this.timer = null;
+		this.timers = [];
 		this.currentAnswer = false;
 		this.isLocked = false;
 		this.responseTimes = [];
 		this.questionStartTime = 0;
 		this.gameEnded = false;
+		this.gameStarted = false;
 		this.init();
 	}
 	init() {
 		this.render();
 		this.startGame();
+	}
+	clearTimers() {
+		this.timers.forEach(t => clearTimeout(t));
+		this.timers = [];
+	}
+	addTimer(fn, ms) {
+		this.timers.push(setTimeout(fn, ms));
 	}
 	render() {
 		this.container.innerHTML = `
@@ -47,7 +55,7 @@ export class StroopTest {
 		`;
 		document.getElementById('backBtn').addEventListener('click', () => {
 			this.gameEnded = true;
-			clearTimeout(this.timer);
+			this.clearTimers();
 			this.onBack();
 		});
 		document.getElementById('noBtn').addEventListener('click', () => this.answer(false));
@@ -60,9 +68,9 @@ export class StroopTest {
 		this.responseTimes = [];
 		this.isLocked = false;
 		this.gameEnded = false;
+		this.gameStarted = false;
+		this.clearTimers();
 		this.generateQuestion();
-		document.getElementById('timerBar').classList.add('running');
-		this.timer = setTimeout(() => this.endGame(), 30000);
 	}
 	generateQuestion() {
 		const leftColor = this.colors[Math.floor(Math.random() * this.colors.length)];
@@ -76,10 +84,15 @@ export class StroopTest {
 		`;
 	}
 	answer(userAnswer) {
-		if (this.isLocked) return;
+		if (this.isLocked || this.gameEnded) return;
+		if (!this.gameStarted) {
+			this.gameStarted = true;
+			document.getElementById('timerBar').classList.add('running');
+			this.addTimer(() => this.endGame(), 30000);
+		}
 		const responseTime = Date.now() - this.questionStartTime;
-		this.responseTimes.push(responseTime);
 		if (userAnswer === this.currentAnswer) {
+			this.responseTimes.push(responseTime);
 			this.correct++;
 			this.score += 10 * this.multiplier;
 			this.multiplier = Math.min(this.multiplier + 1, 5);
@@ -90,7 +103,7 @@ export class StroopTest {
 			this.updateStats();
 			this.isLocked = true;
 			document.getElementById('cards').innerHTML = `<div style="color: var(--error); font-size: 1.5rem;">Неверно!</div>`;
-			setTimeout(() => {
+			this.addTimer(() => {
 				if (this.gameEnded) return;
 				this.isLocked = false;
 				this.generateQuestion();
@@ -110,7 +123,7 @@ export class StroopTest {
 	endGame() {
 		if (this.gameEnded) return;
 		this.gameEnded = true;
-		clearTimeout(this.timer);
+		this.clearTimers();
 		if (this.score > this.record) {
 			this.record = this.score;
 			this.storage.set('stroopRecord', this.record);

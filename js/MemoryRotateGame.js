@@ -13,6 +13,7 @@ export class MemoryRotateGame {
 		this.selectedTiles = [];
 		this.isLocked = false;
 		this.rotation = 0;
+		this.timers = [];
 		this.init();
 	}
 	init() {
@@ -22,6 +23,7 @@ export class MemoryRotateGame {
 	render() {
 		this.container.innerHTML = `
 			<button class="back-btn" id="backBtn">&larr;</button>
+			${this.sandbox ? '<button class="skip-btn" id="skipBtn">Пропустить</button>' : ''}
 			<div class="container">
 				<div class="header">
 					<div class="header-item"><span>Очки</span><strong id="score">${this.score}</strong></div>
@@ -36,6 +38,26 @@ export class MemoryRotateGame {
 		this.grid = document.getElementById('grid');
 		this.renderGrid();
 		document.getElementById('backBtn').addEventListener('click', () => this.onBack());
+		if (this.sandbox) document.getElementById('skipBtn').addEventListener('click', () => this.skipLevel());
+	}
+	clearTimers() {
+		this.timers.forEach(t => clearTimeout(t));
+		this.timers = [];
+	}
+	addTimer(fn, ms) {
+		this.timers.push(setTimeout(fn, ms));
+	}
+	skipLevel() {
+		this.clearTimers();
+		this.isLocked = true;
+		this.level++;
+		const total = this.gridSize * this.gridSize;
+		if (this.getActiveTilesCount() >= Math.floor(total * 0.5) && this.gridSize < 9) {
+			this.gridSize++;
+			this.renderGrid();
+		}
+		this.updateLevel();
+		this.startRound();
 	}
 	renderLives() {
 		if (this.sandbox) return '<div class="life"></div><span style="margin-left:0.5rem">∞</span>';
@@ -54,7 +76,8 @@ export class MemoryRotateGame {
 		}
 	}
 	getActiveTilesCount() {
-		return Math.min(this.level + 2, this.gridSize * this.gridSize - 1);
+		const total = this.gridSize * this.gridSize;
+		return Math.min(this.level + 2, Math.floor(total * 0.5));
 	}
 	startRound() {
 		this.selectedTiles = [];
@@ -91,7 +114,7 @@ export class MemoryRotateGame {
 	showPattern() {
 		const tiles = this.grid.children;
 		this.activeTiles.forEach(i => tiles[i].classList.add('active'));
-		setTimeout(() => {
+		this.addTimer(() => {
 			this.activeTiles.forEach(i => tiles[i].classList.remove('active'));
 			this.rotateGrid();
 		}, 1000 + this.level * 200);
@@ -104,16 +127,16 @@ export class MemoryRotateGame {
 			this.rotation += 90;
 			this.grid.style.transform = `rotate(${this.rotation}deg)`;
 			if (count < rotations) {
-				setTimeout(rotate, 600);
+				this.addTimer(rotate, 600);
 			} else {
-				setTimeout(() => {
+				this.addTimer(() => {
 					this.activeTiles = this.activeTiles.map(i => this.rotateIndex(i, rotations));
 					this.isLocked = false;
 					this.updateMessage('Выберите плитки');
 				}, 300);
 			}
 		};
-		setTimeout(rotate, 300);
+		this.addTimer(rotate, 300);
 	}
 	rotateIndex(index, times) {
 		let row = Math.floor(index / this.gridSize);
@@ -149,25 +172,26 @@ export class MemoryRotateGame {
 			} else {
 				this.level = Math.max(1, this.level - 1);
 				this.updateLevel();
-				setTimeout(() => this.startRound(), 1000);
+				this.addTimer(() => this.startRound(), 1000);
 			}
 		}
 	}
 	levelUp() {
 		this.isLocked = true;
 		this.level++;
-		if (this.level > 3 && this.gridSize < 5) {
+		const total = this.gridSize * this.gridSize;
+		if (this.getActiveTilesCount() >= Math.floor(total * 0.5) && this.gridSize < 9) {
 			this.gridSize++;
 			this.renderGrid();
 		}
 		this.updateLevel();
 		this.updateRecord();
-		setTimeout(() => this.startRound(), 500);
+		this.addTimer(() => this.startRound(), 500);
 	}
 	gameOver() {
 		this.updateRecord();
 		this.updateMessage('Игра окончена!');
-		setTimeout(() => {
+		this.addTimer(() => {
 			this.level = 1;
 			this.lives = this.sandbox ? Infinity : 3;
 			this.score = 0;
