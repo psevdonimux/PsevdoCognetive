@@ -4,6 +4,7 @@ import { MemoryRotateGame } from './MemoryRotateGame.js';
 import { StroopTest } from './StroopTest.js';
 import { CBBTGame } from './CBBTGame.js';
 import { SchulteTable } from './SchulteTable.js';
+import { AngleSumGame } from './AngleSumGame.js';
 class App {
 	constructor() {
 		this.storage = new StorageManager();
@@ -31,6 +32,7 @@ class App {
 					<button class="menu-btn" data-game="cbbt">Блоки Корси</button>
 					<button class="menu-btn" data-game="schulte">Таблица Шульте</button>
 					<button class="menu-btn" data-game="stroop">Тест Струпа</button>
+					<button class="menu-btn" data-game="anglesum">Углосумм</button>
 				</div>
 			</div>
 		`;
@@ -63,6 +65,9 @@ class App {
 				break;
 			case 'stroop':
 				this.currentGame = new StroopTest(this.storage, this.container, onBack);
+				break;
+			case 'anglesum':
+				this.currentGame = new AngleSumGame(this.storage, this.container, onBack);
 				break;
 		}
 	}
