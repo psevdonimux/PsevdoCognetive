@@ -1,3 +1,5 @@
+[Русский](README.md) | [English](README.en.md)
+
 # PsevdoCognetive - Cognitive Training
 
 Web application for brain cognitive training.
